@@ -1,101 +1,136 @@
-# 🔧 How to Update **BossECU / Honduino** Firmware
+# 🔧 How to Update BossECU / Honduino ECU
 
-> This guide explains how to safely update your ECU firmware using **rusefi_updater.exe**.
+## ⚠️ Before You Start
+
+Make sure the ECU is **not connected to the vehicle** during the firmware update process.
 
 ---
 
 ## ⚙️ Step-by-step Instructions
 
-### 1️⃣ Disconnect from the vehicle
-Unplug the ECU from your car before starting the update process.
+### 1️⃣ Disconnect the ECU from the vehicle
+
+Unplug the ECU from the car before starting the update process.
 
 ---
 
-### 2️⃣ Download and extract the firmware bundle
-Download the latest firmware package for your ECU model and **extract it** to a convenient location on your computer.
+### 2️⃣ Save your current tune
+
+Open your project and **save the current `.msq` file** to your **desktop**.
+This will serve as a backup of your current tune.
 
 ---
 
-### 3️⃣ Open the updater app
-Launch **`rusefi_updater.exe`** (included inside the firmware bundle).
+### 3️⃣ Download the latest firmware
+
+Download the latest firmware package from:
+
+[https://content.epicefi.com/firmware/](https://content.epicefi.com/firmware/)
+
+Inside the latest folder, **choose the correct firmware depending on your ECU model**:
+
+* **BossBrain_F427**
+* **BossECU_48**
+* **uaefi**
+
+Using the wrong firmware will prevent the ECU from operating correctly.
 
 ---
 
-### 4️⃣ Dismiss the startup error
-When the updater opens, it might show an error pop-up — just click **“OK”**.  
-This is expected and normal.
+### 4️⃣ Connect to the ECU and backup the tune
+
+Open **TeraFlash**:
+
+[https://content.epicefi.com/teraflash/](https://content.epicefi.com/teraflash/)
+
+Connect to the ECU and **create a backup of the current firmware** before updating.
 
 ---
 
-### 5️⃣ Put the ECU into DFU (firmware update) mode
+### 5️⃣ Flash the new firmware
 
-On the ECU board, you’ll find **two buttons** labeled **BOOT** and **RESET**.
+In **TeraFlash**:
 
-Follow these steps carefully:
-
-1. **Press and hold** the **BOOT** button.  
-2. While holding **BOOT**, **press the RESET** button once.  
-3. **Release BOOT**.  
-
-Your ECU is now in **DFU mode**.
+1. Select the **`.bin` firmware file** you downloaded.
+2. Click **Flash**.
+3. Wait until the flashing process finishes.
 
 ---
 
-### 6️⃣ Check for DFU connection
+### ⚠️ If the ECU fails to connect
 
-In the updater app, the grey button should change to:
+If TeraFlash cannot connect to the ECU, you may need to place the ECU into **DFU (Device Firmware Update) mode**.
 
-> 🟩 **Update Firmware via DFU**
+#### Entering DFU Mode
 
-If the button **does not appear**, it means your computer doesn’t have the DFU drivers installed.
+On the ECU board there are two buttons: **BOOT** and **RESET**.
 
-<details>
-<summary>📦 How to install DFU drivers</summary>
+Follow these steps:
 
-1. Inside the firmware bundle, open the **`drivers`** folder.  
-2. Run the driver installer and follow the instructions.  
-3. **Restart your computer.**  
-4. Put the ECU into DFU mode again (repeat Step 5).  
-5. Reopen the updater app — the DFU update button should now appear.
-</details>
+1. **Press and hold** the **BOOT** button.
+2. While holding **BOOT**, **press RESET once**.
+3. **Release BOOT**.
 
----
+The ECU is now in **DFU mode**.
 
-### 7️⃣ Flash the firmware
-
-Click **“Update Firmware via DFU”** and wait.  
-Once the update completes successfully, the updater window will turn **green** ✅.
+Reconnect and retry the firmware flashing process.
 
 ---
 
-### 8️⃣ Load a new base map or update your TunerStudio project
+### 6️⃣ Create a new project with the new firmware
 
-After the firmware update, you can either:
+After flashing the firmware:
 
-- Load a **base map** compatible with the new firmware, **or**  
-- Update your existing **TunerStudio** project with the new `.ini` file.
+1. Create a **new project** using the **new `.ini` file** from the firmware package.
+2. When connecting to the ECU, if prompted about which tune to load, select:
+
+> **Read from Controller**
 
 ---
 
-## 🔄 Updating the TunerStudio Project `.ini` File
+### 7️⃣ Load your previous tune
 
-1. In **TunerStudio**, go to:  
-   **File → Vehicle Projects → Project Properties**
+Open the `.msq` file that you saved earlier on the **desktop**.
 
-2. Under **Firmware**, click:  
-   **Other / Browse**
+---
 
-3. Select the new **`.ini`** file located inside the firmware bundle.
+### 8️⃣ Resolve any configuration conflicts
 
-4. An error pop-up might appear — click to **view the errors**.
+If any errors appear while loading the old tune:
 
-5. Fill in any **missing base settings** manually.
+* The message will usually indicate **which table is causing the conflict**.
+* Most commonly this happens in **axis values**.
+
+Example of an incorrect axis:
+
+```
+0 1 1 3 4 5
+```
+
+Correct version:
+
+```
+0 1 2 3 4 5
+```
+
+Adjust the values until the project loads **without errors**.
+
+---
+
+### 9️⃣ Restart the ECU
+
+Once everything loads correctly:
+
+1. **Restart the ECU**
+2. **Disconnect it**
+3. **Reconnect it to the car**
 
 ---
 
 ### ✅ Done!
-Your ECU firmware and project are now updated and ready to use 🎉
+
+Your ECU firmware is now updated and your previous tune has been restored.
 
 ---
 
-**Tip:** Keep your firmware bundle backed up for reference, and always verify the correct firmware version before flashing.
+💡 **Tip:** Always keep a backup of your `.msq` and `.bin` files before performing any firmware update.
